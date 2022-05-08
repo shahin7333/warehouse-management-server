@@ -28,15 +28,20 @@ async function run() {
       const inventories = await cursor.toArray()
       res.send(inventories)
     })
-     app.get('/inventory/:id',async (req, res)=>{
-         const id=req.params.id;
-         const query={_id: ObjectId(id)};
-         const inventory=await productCollection.findOne(query);
-         res.send(inventory);
-     })
+    app.get('/inventory/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: ObjectId(id) }
+      const inventory = await productCollection.findOne(query)
+      res.send(inventory)
+    })
 
-  } 
-  finally {
+    /////post
+    app.post('/inventory', async (req, res) => {
+      const newInventory = req.body
+      const result = await productCollection.insertOne(newInventory)
+      res.send(result)
+    })
+  } finally {
   }
 }
 
