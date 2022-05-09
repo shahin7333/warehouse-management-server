@@ -24,8 +24,6 @@ const Client = new MongoClient(manageUri, {
   serverApi: ServerApiVersion.v1,
 })
 
-
-
 async function run() {
   try {
     await client.connect()
@@ -33,10 +31,12 @@ async function run() {
       .db('bicycleWarehouse')
       .collection('inventory')
 
-     // //manage
-    
+    // //manage
+
     // await client.connect()
-    const manageCollection=client.db('bicycleWarehouse').collection('manageItem')
+    const manageCollection = client
+      .db('bicycleWarehouse')
+      .collection('manageItem')
 
     app.get('/inventory', async (req, res) => {
       const query = {}
@@ -50,18 +50,33 @@ async function run() {
       const inventory = await productCollection.findOne(query)
       res.send(inventory)
     })
-
-
-   
-
-    
-    app.get('/manage',async (req,res)=>{
-        const query={}
-    const cursor=manageCollection.find(query)
-    const manages=await cursor.toArray();
-    res.send(manages);
+    //manage
+    app.get('/manage', async (req, res) => {
+      const query = {}
+      const cursor = manageCollection.find(query)
+      const manages = await cursor.toArray()
+      res.send(manages)
     })
-    
+    // addnewitem
+    app.post('/manage', async (req, res) => {
+      const newManage = req.body
+      const result = await manageCollection.insertOne(newManage)
+      res.send(result)
+    })
+    app.get('/manage/:id',async(req,res)=>{
+        const id=req.params.id
+        const query={_id:ObjectId(id)}
+        const manage=await manageCollection.findOne(query)
+        res.send(manage)
+    })
+
+    //delete
+    app.delete('/manage/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: ObjectId(id) }
+      const result = await manageCollection.deleteOne(query)
+      res.send(result)
+    })
   } finally {
   }
 }
