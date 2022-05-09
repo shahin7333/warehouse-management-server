@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors')
+const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 const app = express()
@@ -50,9 +51,10 @@ async function run() {
       const inventory = await productCollection.findOne(query)
       res.send(inventory)
     })
+    
+    
     //manage
     app.get('/manage', async (req, res) => {
-      
       const query = {}
       const cursor = manageCollection.find(query)
       const manages = await cursor.toArray()
@@ -64,11 +66,11 @@ async function run() {
       const result = await manageCollection.insertOne(newManage)
       res.send(result)
     })
-    app.get('/manage/:id',async(req,res)=>{
-        const id=req.params.id
-        const query={_id:ObjectId(id)}
-        const manage=await manageCollection.findOne(query)
-        res.send(manage)
+    app.get('/manage/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: ObjectId(id) }
+      const manage = await manageCollection.findOne(query)
+      res.send(manage)
     })
 
     //delete
@@ -79,7 +81,6 @@ async function run() {
       res.send(result)
     })
     // myitems
-    
   } finally {
   }
 }
