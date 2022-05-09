@@ -52,6 +52,7 @@ async function run() {
     })
     //manage
     app.get('/manage', async (req, res) => {
+      
       const query = {}
       const cursor = manageCollection.find(query)
       const manages = await cursor.toArray()
@@ -77,8 +78,8 @@ async function run() {
       const result = await manageCollection.deleteOne(query)
       res.send(result)
     })
-
-
+    // myitems
+    
   } finally {
   }
 }
