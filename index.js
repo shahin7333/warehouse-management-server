@@ -77,6 +77,8 @@ async function run() {
       const result = await manageCollection.deleteOne(query)
       res.send(result)
     })
+
+
   } finally {
   }
 }
