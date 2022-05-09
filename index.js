@@ -72,7 +72,7 @@ async function run() {
       const manage = await manageCollection.findOne(query)
       res.send(manage)
     })
-
+// comment
     //delete
     app.delete('/manage/:id', async (req, res) => {
       const id = req.params.id
