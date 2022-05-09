@@ -10,11 +10,21 @@ app.use(cors())
 app.use(express.json())
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.5wev9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
+
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 })
+
+const manageUri = `mongodb+srv://${process.env.DB_USERMANAGE}:${process.env.DB_PASSMANAGE}@cluster0.5wev9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
+const Client = new MongoClient(manageUri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverApi: ServerApiVersion.v1,
+})
+
+
 
 async function run() {
   try {
@@ -22,6 +32,12 @@ async function run() {
     const productCollection = client
       .db('bicycleWarehouse')
       .collection('inventory')
+
+     // //manage
+    
+    // await client.connect()
+    const manageCollection=client.db('bicycleWarehouse').collection('manageItem')
+
     app.get('/inventory', async (req, res) => {
       const query = {}
       const cursor = productCollection.find(query)
@@ -35,12 +51,17 @@ async function run() {
       res.send(inventory)
     })
 
-    /////post
-    app.post('/inventory', async (req, res) => {
-      const newInventory = req.body
-      const result = await productCollection.insertOne(newInventory)
-      res.send(result)
+
+   
+
+    
+    app.get('/manage',async (req,res)=>{
+        const query={}
+    const cursor=manageCollection.find(query)
+    const manages=await cursor.toArray();
+    res.send(manages);
     })
+    
   } finally {
   }
 }
